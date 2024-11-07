@@ -1,37 +1,44 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-
-	"github.com/bigg215/pokedexcli/internal/papi"
+	"strings"
 )
 
-func commandMapf(cfg *config) (string, error) {
-	resp, err := papi.GetLocations(cfg.Next)
+func commandMapf(cfg *config, args ...string) string {
+	resp, err := cfg.papiClient.ListLocations(cfg.Next)
+	out := ""
 	if err != nil {
-		return "", err
+		return fmt.Sprintf("[red]error:[white] %s\n", err)
 	}
 	cfg.Next = resp.Next
 	cfg.Previous = resp.Previous
 	for _, loc := range resp.Results {
-		fmt.Println(loc.Name)
+		out += formatMapOutput(loc.URL, loc.Name)
 	}
-	return "", nil
+	return out
 }
 
-func commandMapb(cfg *config) (string, error) {
+func commandMapb(cfg *config, args ...string) string {
 	if cfg.Previous == nil {
-		return "", errors.New("you're on the first page")
+		return "[red]error:[white] you're on the first page\n"
 	}
-	resp, err := papi.GetLocations(cfg.Previous)
+	resp, err := cfg.papiClient.ListLocations(cfg.Previous)
+	out := ""
 	if err != nil {
-		return "", err
+		return fmt.Sprintf("[red]error:[white] %s\n", err)
 	}
 	cfg.Next = resp.Next
 	cfg.Previous = resp.Previous
 	for _, loc := range resp.Results {
-		fmt.Println(loc.Name)
+		out += formatMapOutput(loc.URL, loc.Name)
 	}
-	return "", nil
+	return out
+}
+
+func formatMapOutput(loc, name string) string {
+	stripped := strings.TrimPrefix(loc, "https://pokeapi.co/api/v2/location-area/")
+	trimmed := strings.Trim(stripped, "/")
+	out := fmt.Sprintf("[yellow]%s[white]\t%s\n", trimmed, name)
+	return out
 }
