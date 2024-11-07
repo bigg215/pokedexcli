@@ -1,8 +1,6 @@
 package main
 
-import "os"
-
-func commandExit(cfg *config) error {
-	os.Exit(0)
-	return nil
+func commandExit(cfg *config) (string, error) {
+	cfg.appConfig.Stop()
+	return "", nil
 }
