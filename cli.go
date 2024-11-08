@@ -5,7 +5,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/bigg215/pokedexcli/internal/papi"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -14,19 +13,6 @@ func cleanInput(text string) []string {
 	output := strings.ToLower(text)
 	words := strings.Fields(output)
 	return words
-}
-
-type cliCommand struct {
-	name        string
-	description string
-	callback    func(*config, ...string) string
-}
-
-type config struct {
-	Next       *string
-	Previous   *string
-	appConfig  *tview.Application
-	papiClient papi.Client
 }
 
 func repl(cfg *config) {
@@ -119,6 +105,21 @@ func getCommands() map[string]cliCommand {
 			name:        "explore <location>",
 			description: "Explore a location",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <pokemon>",
+			description: "Catch a pokemon",
+			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect <pokemon>",
+			description: "Inspect a known pokemon's stats",
+			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Display current pokeDex entires",
+			callback:    commandPokedex,
 		},
 	}
 }

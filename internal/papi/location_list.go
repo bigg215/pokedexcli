@@ -2,8 +2,6 @@ package papi
 
 import (
 	"encoding/json"
-	"io"
-	"net/http"
 )
 
 func (c *Client) ListLocations(pageURL *string) (Locations, error) {
@@ -22,19 +20,10 @@ func (c *Client) ListLocations(pageURL *string) (Locations, error) {
 		return locationsResp, nil
 	}
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return Locations{}, err
-	}
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return Locations{}, err
-	}
-	defer resp.Body.Close()
+	dat, err := c.processGetRequest(url)
 
-	dat, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return Locations{}, err
+		return Locations{}, nil
 	}
 
 	locationsResp := Locations{}
