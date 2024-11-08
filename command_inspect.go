@@ -7,7 +7,7 @@ func commandInspect(cfg *config, args ...string) string {
 		return "[red]error:[white] you must provide a pokemon name\n"
 	}
 	name := args[0]
-	if val, ok := cfg.currentUser.pokeDex[name]; ok {
+	if val, ok := cfg.currentUser.PokeDex[name]; ok {
 		output := formatStats("Name", val.Name)
 		output += formatStats("Height", fmt.Sprintf("%d", val.Height))
 		output += formatStats("Weight", fmt.Sprintf("%d", val.Weight))

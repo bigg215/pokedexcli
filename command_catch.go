@@ -14,6 +14,6 @@ func commandCatch(cfg *config, args ...string) string {
 	output := fmt.Sprintln()
 	output += fmt.Sprintf("Throwing a [yellow]Pokeball[white] at [green]%s[white]...\n", pokemon.Name)
 	output += fmt.Sprintf("[green]%s[white] was caught!\n", pokemon.Name)
-	cfg.currentUser.pokeDex[pokemon.Name] = pokemon
+	cfg.currentUser.PokeDex[pokemon.Name] = pokemon
 	return output
 }

@@ -121,5 +121,10 @@ func getCommands() map[string]cliCommand {
 			description: "Display current pokeDex entires",
 			callback:    commandPokedex,
 		},
+		"save": {
+			name:        "save",
+			description: "Save the current game",
+			callback:    commandSave,
+		},
 	}
 }

@@ -20,5 +20,5 @@ type config struct {
 }
 
 type user struct {
-	pokeDex map[string]papi.Pokemon
+	PokeDex map[string]papi.Pokemon `json:"pokedex"`
 }
