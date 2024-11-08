@@ -12,7 +12,7 @@ func commandSave(cfg *config, args ...string) string {
 		return check(err)
 	}
 
-	file, err := os.Create("saveFile.json")
+	file, err := os.Create("saves/saveFile.json")
 
 	if err != nil {
 		return check(err)

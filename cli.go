@@ -3,17 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
-
-func cleanInput(text string) []string {
-	output := strings.ToLower(text)
-	words := strings.Fields(output)
-	return words
-}
 
 func repl(cfg *config) {
 	out := tview.NewTextView()
@@ -125,6 +118,11 @@ func getCommands() map[string]cliCommand {
 			name:        "save",
 			description: "Save the current game",
 			callback:    commandSave,
+		},
+		"load": {
+			name:        "load",
+			description: "Load a saved game",
+			callback:    commandLoad,
 		},
 	}
 }
