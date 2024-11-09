@@ -25,9 +25,10 @@ type config struct {
 }
 
 type user struct {
-	UserID     uuid.UUID               `json:"user_id"`
-	PlayerName string                  `json:"player_name"`
-	PokeDex    map[string]papi.Pokemon `json:"pokedex"`
+	UserID      uuid.UUID               `json:"user_id"`
+	PlayerName  string                  `json:"player_name"`
+	EquipedBall ballType                `json:"equiped_pokeball"`
+	PokeDex     map[string]papi.Pokemon `json:"pokedex"`
 }
 
 type gameData struct {

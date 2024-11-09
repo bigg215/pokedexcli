@@ -14,7 +14,7 @@ const (
 )
 
 func check(e error) string {
-	return fmt.Sprintf("%s", e)
+	return fmt.Sprintf("[red]error:[white] %s\n", e)
 }
 
 func cleanInput(text string) []string {
