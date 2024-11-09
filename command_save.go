@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/rivo/tview"
@@ -31,7 +29,7 @@ func commandSave(cfg *config, args ...string) string {
 		saveCreatedTime := time.Now().UTC()
 
 		if val, ok := saveData.SavedGameData[i]; ok {
-			title = fmt.Sprintf("[%d] - user: %s", i, val.User.UserID)
+			title = fmt.Sprintf("[%d] Name: %s | Pokedex: %d", i, val.User.PlayerName, len(val.User.PokeDex))
 			desc = fmt.Sprintf("Created: %s - Updated: %s", val.CreatedAt.Local().Format("2006-01-02 15:04:05"), val.UpdatedAt.Local().Format("2006-01-02 15:04:05"))
 			saveCreatedTime = val.CreatedAt
 		}
@@ -57,54 +55,4 @@ func commandSave(cfg *config, args ...string) string {
 
 	cfg.appConfig.SetRoot(centerGrid, true).SetFocus(saveList)
 	return ""
-}
-
-func centeredGrid(p tview.Primitive, width, height int) tview.Primitive {
-	return tview.NewFlex().
-		AddItem(nil, 0, 1, false).
-		AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-			AddItem(nil, 0, 1, false).
-			AddItem(p, height, 1, true).
-			AddItem(nil, 0, 1, false), width, 1, true).
-		AddItem(nil, 0, 1, false)
-}
-
-func saveGameFile(T interface{}) error {
-	jsonData, err := json.MarshalIndent(T, "", "  ")
-
-	if err != nil {
-		return err
-	}
-
-	file, err := os.Create("saves/saveFile.json")
-
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	_, err = file.Write(jsonData)
-
-	if err != nil {
-		return err
-	}
-
-	file.Sync()
-
-	return nil
-}
-
-func loadGameFile(T interface{}) error {
-	jsonData, err := os.ReadFile("saves/saveFile.json")
-
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(jsonData, &T)
-
-	if err != nil {
-		return err
-	}
-	return nil
 }
