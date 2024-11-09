@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+const (
+	ALPHA string = "abcde"
+)
+
 func check(e error) string {
 	return fmt.Sprintf("%s", e)
 }

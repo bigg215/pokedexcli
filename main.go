@@ -13,7 +13,8 @@ func main() {
 	app := tview.NewApplication()
 	papiClient := papi.NewClient(5*time.Second, 5*time.Minute)
 	newUser := user{
-		PokeDex: make(map[string]papi.Pokemon),
+		PlayerName: "John Doe",
+		PokeDex:    make(map[string]papi.Pokemon),
 	}
 	cfg := &config{
 		appConfig:   app,

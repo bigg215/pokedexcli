@@ -17,6 +17,30 @@ func repl(cfg *config) {
 	input := tview.NewInputField()
 	input.SetBorder(true)
 	input.SetLabel("pokedex> ")
+	input.SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEnter {
+			words := cleanInput(input.GetText())
+			if len(words) == 0 {
+				return
+			}
+			commandName := words[0]
+			args := []string{}
+			if len(words) > 1 {
+				args = words[1:]
+			}
+			curr := out.GetText(false)
+			command, exists := getCommands()[commandName]
+			if exists {
+				output := command.callback(cfg, args...)
+				out.SetText(curr + output)
+			} else {
+				out.SetText(curr + fmt.Sprintln("[red]error:[white] unknown command[white]"))
+			}
+			input.SetText("")
+			out.ScrollToEnd()
+			return
+		}
+	})
 
 	// Create Grid containing the application's widgets
 	appGrid := tview.NewFlex().SetDirection(tview.FlexRow).
@@ -27,35 +51,8 @@ func repl(cfg *config) {
 	cfg.appConfig.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
 		switch event.Key() {
-		case tcell.KeyEnter:
-			words := cleanInput(input.GetText())
-
-			if len(words) == 0 {
-				return nil
-			}
-			commandName := words[0]
-			args := []string{}
-
-			if len(words) > 1 {
-				args = words[1:]
-			}
-
-			curr := out.GetText(false)
-			command, exists := getCommands()[commandName]
-			if exists {
-				output := command.callback(cfg, args...)
-				out.SetText(curr + output)
-			} else {
-				out.SetText(curr + fmt.Sprintln("[red]error:[white] unknown command[white]"))
-			}
-			//output := out.GetText(false) + input.GetText()
-			//out.SetText(fmt.Sprintf("%s\n", output))
-			input.SetText("")
-			out.ScrollToEnd()
-			return nil
 		case tcell.KeyEsc:
-			// Exit the application
-			cfg.appConfig.Stop()
+			cfg.appConfig.SetRoot(appGrid, true).SetFocus(input)
 			return nil
 		}
 		return event
@@ -63,7 +60,8 @@ func repl(cfg *config) {
 
 	// Set the grid as the application root and focus the input field
 	cfg.appConfig.SetRoot(appGrid, true).SetFocus(input)
-
+	cfg.windowRoot = appGrid
+	cfg.windowCMD = out
 	// Run the application
 	err := cfg.appConfig.Run()
 	if err != nil {
@@ -123,6 +121,11 @@ func getCommands() map[string]cliCommand {
 			name:        "load",
 			description: "Load a saved game",
 			callback:    commandLoad,
+		},
+		"admin": {
+			name:        "admin",
+			description: "testing",
+			callback:    commandAdmin,
 		},
 	}
 }
